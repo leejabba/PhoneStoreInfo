@@ -9,13 +9,10 @@ import android.widget.Button;
 public class MainActivity extends AppCompatActivity {
     Button btnGoDetail;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
         btnGoDetail = (Button) findViewById(R.id.btnGoDe);
         btnGoDetail.setOnClickListener(new View.OnClickListener() {

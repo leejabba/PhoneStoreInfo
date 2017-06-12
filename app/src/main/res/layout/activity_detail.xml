@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/totalView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="kr.heythisway.phonestoreinfo.DetailActivity">
@@ -42,28 +43,28 @@
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:hint="매장명(*)"
         android:inputType="textPersonName"
         app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/editStoreCode"
-        app:layout_constraintLeft_toLeftOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/editStoreCode" />
 
     <EditText
         android:id="@+id/editTeleCompany"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
         android:hint="통신사"
         android:inputType="textPersonName"
-        app:layout_constraintTop_toTopOf="@+id/editStoreCode"
-        android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintLeft_toRightOf="@+id/editStoreCode"
-        android:layout_marginLeft="8dp" />
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editStoreCode" />
 
     <EditText
         android:id="@+id/editStoreAddress"
@@ -130,26 +131,40 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
 
+        android:layout_marginBottom="0dp"
         android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        android:layout_marginBottom="0dp">
+        app:layout_constraintRight_toRightOf="parent">
 
         <Button
             android:id="@+id/btnSave"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="저장하기" />
+            android:text="저장" />
+
+        <Button
+            android:id="@+id/btnRead"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="읽기" />
+
+        <Button
+            android:id="@+id/btnDelete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="전체삭제" />
 
         <Button
             android:id="@+id/btnCancle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="리스트 보기" />
+            android:text="닫기" />
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

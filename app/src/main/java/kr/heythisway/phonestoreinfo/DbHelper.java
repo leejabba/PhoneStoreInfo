@@ -19,7 +19,7 @@ import java.util.List;
 
 public class DbHelper extends OrmLiteSqliteOpenHelper {
     public static final String DATABASE_NAME = "storeInfo";
-    public static final int DATABASE_VERSION = 1;
+    public static final int DATABASE_VERSION = 2;
 
     // 싱글톤 구현
     private static DbHelper instance;
@@ -28,7 +28,7 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    public static DbHelper getInstance(Context context) {
+    public static synchronized DbHelper getInstance(Context context) {
         if (instance == null) {
             instance = new DbHelper(context);
         }
@@ -115,10 +115,8 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
             Dao<StoreInfo,Integer> dao = getDao(StoreInfo.class);
             // 2. 데이터를 삭제
             dao.delete(storeInfo);
-            // * 참고 : 아이디로 삭제
-            // dao.deleteById(3);
         } catch (SQLException e) {
-            e.printStackTrace();
+            Log.e("삭제되지 않았습니다.", "으따?! 아직 삭제 로직이 동작하지 않았써라~");
         }
     }
     // Delete By Id
