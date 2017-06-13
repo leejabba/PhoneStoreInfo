@@ -13,7 +13,7 @@ import java.util.Date;
 public class StoreInfo {
     @DatabaseField(generatedId = true)
     private int id;
-    @DatabaseField(uniqueIndexName = "storeCode")
+    @DatabaseField(uniqueIndex = true)
     private String storeCode;
     @DatabaseField
     private String storeName;

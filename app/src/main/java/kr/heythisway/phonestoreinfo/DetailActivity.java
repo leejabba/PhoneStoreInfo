@@ -1,6 +1,7 @@
 package kr.heythisway.phonestoreinfo;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,6 +13,10 @@ import android.widget.Toast;
 import java.util.List;
 
 public class DetailActivity extends AppCompatActivity implements View.OnClickListener {
+    // 팝업창 용도에 따른 상수 설정
+    final static int POPUP_NECESSARY = 1;
+    final static int POPUP_DELETE = 2;
+
     // 위젯 변수
     EditText editStoreCode, editStoreAddress, editStoreFax, editStoreTel, editTeleCompany, editStoreManagerName, editStoreName;
     Button btnSave, btnCancle, btnRead, btnDelete, btnUpdate;
@@ -48,13 +53,17 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             btnUpdate.setVisibility(View.VISIBLE);
         }
 
-        buttonClickLisener();
+        callButtonClickLisener();
 
         setPopup = new AlertDialog.Builder(this);
-        setPopupWindow("경고", "필수 입력란을 모두 채워주세요!");
     }
 
-    private void buttonClickLisener() {
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    private void callButtonClickLisener() {
         btnSave.setOnClickListener(this);
         btnCancle.setOnClickListener(this);
         btnRead.setOnClickListener(this);
@@ -62,26 +71,45 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         btnUpdate.setOnClickListener(this);
     }
 
-//    protected void clearEditText() {
-//        editStoreCode.setText("");
-//        editTeleCompany.setText("");
-//        editStoreName.setText("");
-//        editStoreAddress.setText("");
-//        editStoreTel.setText("");
-//        editStoreFax.setText("");
-//        editStoreManagerName.setText("");
-//    }
+    protected void clearEditText() {
+        // EditText 내용 모두 지우고
+        editStoreCode.setText("");
+        editTeleCompany.setText("");
+        editStoreName.setText("");
+        editStoreAddress.setText("");
+        editStoreTel.setText("");
+        editStoreFax.setText("");
+        editStoreManagerName.setText("");
+        // 임시값 초기화
+        tempDB();
+    }
+
 
     /**
      * 팝업창 설정 메서드
      *
      * @param title 팝업창 제목
      * @param msg   팝업창 내용
+     * @param order 팝업 목적 - 상수 설정 값 POPUP_NECESSARY : 필수항목 입력요청 팝업 / POPUP_DELETE : 삭제여부 확인
      */
-    private void setPopupWindow(String title, String msg) {
+    private void setPopupWindow(String title, String msg, int order) {
         setPopup.setTitle(title);
         setPopup.setMessage(msg);
-        setPopup.setPositiveButton("확인", null);
+        switch (order) {
+            case POPUP_NECESSARY:
+                setPopup.setPositiveButton("확인", null);
+                break;
+            case POPUP_DELETE:
+                setPopup.setPositiveButton("삭제", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        clearEditText();
+                        helper.delete(storeInfo.getId());
+                        Toast.makeText(DetailActivity.this, storeInfo.getStoreCode() + " 매장을 삭제하셨습니다. ", Toast.LENGTH_SHORT).show();
+                    }
+                }).setNegativeButton("취소", null);
+                break;
+        }
         popUp = setPopup.create();
     }
 
@@ -116,12 +144,14 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btnSave:
                 if (editStoreCode.getText().toString().equals("") || editStoreName.getText().toString().equals("")
                         || editStoreAddress.getText().toString().equals("") || editStoreTel.getText().toString().equals("")) {
+                    setPopupWindow("경고", "필수 입력란을 모두 채워주세요!", POPUP_NECESSARY);
                     popUp.show();
                 } else {
                     // EditText의 값 Temp 스토리지에 임시저장
                     tempDB();
                     // EditText의 값 DB에 저장
                     insertDB();
+                    Toast.makeText(this, storeInfo.getStoreCode() + " 매장 정보가 저장되었습니다.", Toast.LENGTH_SHORT).show();
                     btnSave.setVisibility(View.GONE);
                     btnUpdate.setVisibility(View.VISIBLE);
                 }
@@ -137,8 +167,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 compareValue();
                 break;
             case R.id.btnDelete:
-                Toast.makeText(this, "본 매장의 id는 " + storeInfo.getId() + "입니다.", Toast.LENGTH_SHORT).show();
-//                helper.delete(storeInfo.getId());
+                if (!editStoreCode.getText().toString().equals("")) {
+                    setPopupWindow("경고", "삭제하면 되돌릴 수 없습니다!", POPUP_DELETE);
+                    popUp.show();
+                } else {
+                    Toast.makeText(this, "지금은 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
@@ -162,6 +196,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             storeInfo.setFax(editStoreFax.getText().toString());
             storeInfo.setManagerName(editStoreManagerName.getText().toString());
             helper.update(storeInfo);
+            Toast.makeText(this, storeInfo.getStoreCode() + " 매장 정보가 수정되었습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 
