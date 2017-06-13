@@ -19,7 +19,8 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     final static int POPUP_DELETE = 2;
 
     // 위젯 변수
-    EditText editStoreCode, editStoreAddress, editStoreFax, editStoreTel, editTeleCompany, editStoreManagerName, editStoreName;
+    EditText editStoreCode, editStoreAddress, editStoreFax, editStoreTel,
+            editTeleCompany, editStoreManagerName, editStoreName;
     Button btnSave, btnCancle, btnRead, btnDelete, btnUpdate;
 
     // 데이터 보관용 변수
@@ -51,15 +52,14 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
 
         Intent intent = getIntent();
         bundle = intent.getExtras();
-
         if (bundle != null) {
-            int intBundle = Integer.parseInt(String.valueOf(bundle));
-            storeId = bundle.getInt(String.valueOf(intBundle));
+            storeId = intent.getIntExtra("id", 0);
+            Toast.makeText(this, "받아온 ID : " + storeId, Toast.LENGTH_SHORT).show();
+            // 값을 불러와 EditText에 할당하는 메서드 호출
+            setDetailValue(storeId);
         } else {
             datas = helper.readAll();
         }
-
-
         // 처음 액티비티 onCreate 상태일때 EditText 상태를 저장한다.
         tempDB();
         // 필수입력 항목인 매장코드란이 비어있지 않으면 저장되어 있는 상세정보이므로 '업데이트'버튼을 보여준다.
@@ -71,6 +71,19 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         callButtonClickLisener();
 
         setPopup = new AlertDialog.Builder(this);
+    }
+
+    // MainActiviy listView에서 선택된 아이템 기준으로 불러온 데이터 값을 화면에 뿌려주는 메서드
+    private void setDetailValue(int storeId) {
+        storeInfo = helper.read(storeId);
+        editStoreCode.setText(storeInfo.getStoreCode());
+        editTeleCompany.setText(storeInfo.getTeleCompanyName());
+        editStoreName.setText(storeInfo.getStoreName());
+        editStoreAddress.setText(storeInfo.getAddress());
+        editStoreTel.setText(storeInfo.getTel());
+        editStoreFax.setText(storeInfo.getFax());
+        editStoreManagerName.setText(storeInfo.getManagerName());
+//        bundle.clear();
     }
 
     @Override
@@ -121,6 +134,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                         clearEditText();
                         helper.delete(storeInfo.getId());
                         Toast.makeText(DetailActivity.this, storeInfo.getStoreCode() + " 매장을 삭제하셨습니다. ", Toast.LENGTH_SHORT).show();
+                        finish();
                     }
                 }).setNegativeButton("취소", null);
                 break;
@@ -182,12 +196,12 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                 compareValue();
                 break;
             case R.id.btnDelete:
-                if (!editStoreCode.getText().toString().equals("")) {
+//                if (!editStoreCode.getText().toString().equals("")) {
                     setPopupWindow("경고", "삭제하면 되돌릴 수 없습니다!", POPUP_DELETE);
                     popUp.show();
-                } else {
-                    Toast.makeText(this, "지금은 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show();
-                }
+//                } else {
+//                    Toast.makeText(this, "지금은 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show();
+//                }
                 break;
         }
     }

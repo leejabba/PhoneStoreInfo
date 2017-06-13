@@ -103,6 +103,7 @@ public class DbHelper extends OrmLiteSqliteOpenHelper {
         try {
             Dao<StoreInfo, Integer> dao = getDao(StoreInfo.class);
             dao.update(storeInfo);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

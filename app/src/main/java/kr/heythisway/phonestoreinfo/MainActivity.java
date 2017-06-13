@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,10 +25,14 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView listView;
     MyAdapter adapter;
 
+    String clickedItemId;
+    String intendSendId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         //ORMLite 사용
         helper = DbHelper.getInstance(this);
@@ -37,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
         // 어댑터 구현
         listView = (RecyclerView) findViewById(R.id.listView);
         adapter = new MyAdapter(datas);
+        adapter.notifyDataSetChanged();
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -66,17 +72,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(Holder holder, int position) {
+        public void onBindViewHolder(final Holder holder, int position) {
             data = datas.get(position);
             holder.setTextStoreCode(data.getStoreCode());
             holder.setTextStoreName(data.getStoreName());
             holder.setTextStoreAddress(data.getAddress());
+            holder.setTextStoreId(data.getId());
 
             holder.btnItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                     intent.putExtra("id", data.getId());
+                    Toast.makeText(MainActivity.this, data.getId() + "선택", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                 }
             });
@@ -89,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class Holder extends RecyclerView.ViewHolder {
-        private TextView textStoreCode, textStoreName, textStoreAddress;
+        private TextView textStoreCode, textStoreName, textStoreAddress, textStoreId;
         private LinearLayout btnItem;
 
         public Holder(View itemView) {
@@ -97,13 +105,19 @@ public class MainActivity extends AppCompatActivity {
             textStoreCode = (TextView) itemView.findViewById(R.id.textStoreCode);
             textStoreName = (TextView) itemView.findViewById(R.id.textStoreName);
             textStoreAddress = (TextView) itemView.findViewById(R.id.textStoreAddress);
+
+            textStoreId = (TextView) itemView.findViewById(R.id.textStoreId);
+//            textStoreId.setVisibility(View.GONE);
+
             btnItem = (LinearLayout) itemView.findViewById(R.id.btnItem);
-
-
         }
 
         public void setTextStoreCode(String textStoreCode) {
             this.textStoreCode.setText(textStoreCode);
+        }
+
+        public void setTextStoreId(int textStoreId) {
+            this.textStoreId.setText(textStoreId + "");
         }
 
         public void setTextStoreName(String textStoreName) {
