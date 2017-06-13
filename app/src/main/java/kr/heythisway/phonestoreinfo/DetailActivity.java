@@ -2,6 +2,7 @@ package kr.heythisway.phonestoreinfo;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -31,6 +32,10 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     AlertDialog popUp;
     AlertDialog.Builder setPopup;
 
+    // Intent 값 받을 변수
+    Bundle bundle;
+    int storeId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,7 +48,17 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         tempStroeInfo = new TempStroeInfo();
 
         helper = DbHelper.getInstance(this);
-        datas = helper.readAll();
+
+        Intent intent = getIntent();
+        bundle = intent.getExtras();
+
+        if (bundle != null) {
+            int intBundle = Integer.parseInt(String.valueOf(bundle));
+            storeId = bundle.getInt(String.valueOf(intBundle));
+        } else {
+            datas = helper.readAll();
+        }
+
 
         // 처음 액티비티 onCreate 상태일때 EditText 상태를 저장한다.
         tempDB();
@@ -235,5 +250,3 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         }
     }
 }
-
-
