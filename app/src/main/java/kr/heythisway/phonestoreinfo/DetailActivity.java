@@ -3,12 +3,14 @@ package kr.heythisway.phonestoreinfo;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import java.util.List;
@@ -22,6 +24,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     EditText editStoreCode, editStoreAddress, editStoreFax, editStoreTel,
             editTeleCompany, editStoreManagerName, editStoreName;
     Button btnSave, btnCancle, btnDelete, btnUpdate;
+    ImageButton btnOpenMap;
 
     // 데이터 보관용 변수
     StoreInfo storeInfo;
@@ -95,6 +98,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         btnCancle.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
         btnUpdate.setOnClickListener(this);
+        btnOpenMap.setOnClickListener(this);
     }
 
     protected void clearEditText() {
@@ -149,6 +153,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         btnDelete = (Button) findViewById(R.id.btnDelete);
         btnUpdate = (Button) findViewById(R.id.btnUpdate);
         btnUpdate.setVisibility(View.GONE);
+        btnOpenMap = (ImageButton) findViewById(R.id.btnOpenMap);
 
         editStoreCode = (EditText) findViewById(R.id.editStoreCode);
         editTeleCompany = (EditText) findViewById(R.id.editTeleCompany);
@@ -197,6 +202,13 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
                     Toast.makeText(this, "지금은 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show();
                 }
                 break;
+            case R.id.btnOpenMap:
+                Uri uri = Uri.parse("geo:37.7749,-122.4194?z=13?q=" + Uri.encode("1st & Pike, Seattle"));
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                intent.setPackage("com.google.android.apps.maps");
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                }
         }
     }
 

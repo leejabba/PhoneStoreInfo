@@ -61,26 +61,27 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="0dp"
         android:hint="통신사"
-        android:inputType="textPersonName"
+        android:inputType="textCapWords"
         app:layout_constraintLeft_toRightOf="@+id/editStoreCode"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="@+id/editStoreCode" />
 
     <EditText
         android:id="@+id/editStoreAddress"
-        android:layout_width="0dp"
+        android:layout_width="300dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="15dp"
         android:hint="주소(*)"
         android:inputType="text"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editStoreName" />
+        app:layout_constraintTop_toBottomOf="@+id/editStoreName"
+        tools:layout_editor_absoluteY="312dp" />
 
     <EditText
         android:id="@+id/editStoreTel"
@@ -166,5 +167,17 @@
             android:layout_weight="1"
             android:text="닫기" />
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/btnOpenMap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="-10dp"
+        app:layout_constraintLeft_toRightOf="@+id/editStoreAddress"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/editStoreAddress"
+        app:srcCompat="@android:drawable/ic_dialog_map" />
 
 </android.support.constraint.ConstraintLayout>

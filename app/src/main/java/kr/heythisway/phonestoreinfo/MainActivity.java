@@ -11,18 +11,18 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity {
     static List<StoreInfo> datas = new ArrayList<>();
     StoreInfo storeInfo;
     DbHelper helper;
     Button btnGoDetail;
     RecyclerView listView;
     MyAdapter adapter;
+    TextView textListCount;
 
     String clickedItemId;
     String intendSendId;
@@ -37,6 +37,10 @@ public class MainActivity extends AppCompatActivity{
         helper = DbHelper.getInstance(this);
         storeInfo = new StoreInfo();
         datas = helper.readAll();
+
+        // 매장갯수 표현
+        textListCount = (TextView) findViewById(R.id.textListCount);
+        textListCount.setText("총 " + datas.size() + "개의 매장이 있습니다.");
 
         // 어댑터 구현
         listView = (RecyclerView) findViewById(R.id.listView);
@@ -54,7 +58,6 @@ public class MainActivity extends AppCompatActivity{
             }
         });
     }
-
 
 
     private class MyAdapter extends RecyclerView.Adapter<Holder> {
@@ -83,7 +86,6 @@ public class MainActivity extends AppCompatActivity{
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, DetailActivity.class);
                     intent.putExtra("id", datas.get(position).getId());
-                    Toast.makeText(MainActivity.this, datas.get(position).getStoreCode() + "매장을 선택하였습니다", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                 }
             });
@@ -135,6 +137,6 @@ public class MainActivity extends AppCompatActivity{
         datas.clear();
         datas = helper.readAll();
         adapter.notifyDataSetChanged();
-
+        textListCount.setText("총 " + datas.size() + "개의 매장이 있습니다.");
     }
 }
