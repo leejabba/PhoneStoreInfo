@@ -16,11 +16,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
-    List<StoreInfo> datas;
+public class MainActivity extends AppCompatActivity{
+    static List<StoreInfo> datas = new ArrayList<>();
     StoreInfo storeInfo;
     DbHelper helper;
-
     Button btnGoDetail;
     RecyclerView listView;
     MyAdapter adapter;
@@ -42,7 +41,6 @@ public class MainActivity extends AppCompatActivity {
         // 어댑터 구현
         listView = (RecyclerView) findViewById(R.id.listView);
         adapter = new MyAdapter(datas);
-        adapter.notifyDataSetChanged();
         listView.setAdapter(adapter);
         listView.setLayoutManager(new LinearLayoutManager(this));
 
@@ -57,12 +55,13 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+
     private class MyAdapter extends RecyclerView.Adapter<Holder> {
-        List<StoreInfo> datas = new ArrayList<>();
         StoreInfo data = new StoreInfo();
 
         public MyAdapter(List<StoreInfo> datas) {
-            this.datas = datas;
+            MainActivity.datas = datas;
         }
 
         @Override
@@ -72,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onBindViewHolder(final Holder holder, int position) {
+        public void onBindViewHolder(Holder holder, final int position) {
             data = datas.get(position);
             holder.setTextStoreCode(data.getStoreCode());
             holder.setTextStoreName(data.getStoreName());
@@ -83,8 +82,8 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(MainActivity.this, DetailActivity.class);
-                    intent.putExtra("id", data.getId());
-                    Toast.makeText(MainActivity.this, data.getId() + "선택", Toast.LENGTH_SHORT).show();
+                    intent.putExtra("id", datas.get(position).getId());
+                    Toast.makeText(MainActivity.this, datas.get(position).getStoreCode() + "매장을 선택하였습니다", Toast.LENGTH_SHORT).show();
                     startActivity(intent);
                 }
             });
@@ -107,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
             textStoreAddress = (TextView) itemView.findViewById(R.id.textStoreAddress);
 
             textStoreId = (TextView) itemView.findViewById(R.id.textStoreId);
-//            textStoreId.setVisibility(View.GONE);
+            textStoreId.setVisibility(View.GONE);
 
             btnItem = (LinearLayout) itemView.findViewById(R.id.btnItem);
         }
@@ -127,5 +126,15 @@ public class MainActivity extends AppCompatActivity {
         public void setTextStoreAddress(String textStoreAddress) {
             this.textStoreAddress.setText(textStoreAddress);
         }
+    }
+
+    // 리스트뷰 변화 내용을 반영하기 위해 datas의 내용을 깨끗이 비우고 다시 데이터베이스에서 읽어와 채운뒤 알려준다.
+    @Override
+    protected void onResume() {
+        super.onResume();
+        datas.clear();
+        datas = helper.readAll();
+        adapter.notifyDataSetChanged();
+
     }
 }

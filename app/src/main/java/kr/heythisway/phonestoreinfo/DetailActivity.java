@@ -21,7 +21,7 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     // 위젯 변수
     EditText editStoreCode, editStoreAddress, editStoreFax, editStoreTel,
             editTeleCompany, editStoreManagerName, editStoreName;
-    Button btnSave, btnCancle, btnRead, btnDelete, btnUpdate;
+    Button btnSave, btnCancle, btnDelete, btnUpdate;
 
     // 데이터 보관용 변수
     StoreInfo storeInfo;
@@ -54,12 +54,11 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
         bundle = intent.getExtras();
         if (bundle != null) {
             storeId = intent.getIntExtra("id", 0);
-            Toast.makeText(this, "받아온 ID : " + storeId, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "받아온 ID : " + storeId, Toast.LENGTH_SHORT).show();
             // 값을 불러와 EditText에 할당하는 메서드 호출
             setDetailValue(storeId);
-        } else {
-            datas = helper.readAll();
         }
+
         // 처음 액티비티 onCreate 상태일때 EditText 상태를 저장한다.
         tempDB();
         // 필수입력 항목인 매장코드란이 비어있지 않으면 저장되어 있는 상세정보이므로 '업데이트'버튼을 보여준다.
@@ -94,7 +93,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void callButtonClickLisener() {
         btnSave.setOnClickListener(this);
         btnCancle.setOnClickListener(this);
-        btnRead.setOnClickListener(this);
         btnDelete.setOnClickListener(this);
         btnUpdate.setOnClickListener(this);
     }
@@ -148,7 +146,6 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
     private void findWiget() {
         btnSave = (Button) findViewById(R.id.btnSave);
         btnCancle = (Button) findViewById(R.id.btnCancle);
-        btnRead = (Button) findViewById(R.id.btnRead);
         btnDelete = (Button) findViewById(R.id.btnDelete);
         btnUpdate = (Button) findViewById(R.id.btnUpdate);
         btnUpdate.setVisibility(View.GONE);
@@ -188,20 +185,17 @@ public class DetailActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.btnCancle:
                 finish();
                 break;
-            case R.id.btnRead:
-                readData();
-                break;
             case R.id.btnUpdate:
                 // tempDB 값과 EditText의 값의 변화를 체크하는 메서드 호출
                 compareValue();
                 break;
             case R.id.btnDelete:
-//                if (!editStoreCode.getText().toString().equals("")) {
+                if (!editStoreCode.getText().toString().equals("")) {
                     setPopupWindow("경고", "삭제하면 되돌릴 수 없습니다!", POPUP_DELETE);
                     popUp.show();
-//                } else {
-//                    Toast.makeText(this, "지금은 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show();
-//                }
+                } else {
+                    Toast.makeText(this, "지금은 삭제할 수 없습니다.", Toast.LENGTH_SHORT).show();
+                }
                 break;
         }
     }
